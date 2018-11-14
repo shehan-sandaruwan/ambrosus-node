@@ -60,6 +60,58 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@sentry/core@4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-4.3.2.tgz#e8a2850a11316d865ed7d3030ee2c4a1608bb1d8"
+  integrity sha512-KO9MimN9ZvpRfrRyunhyGAil6KoIuV7bmfP8OfP/bfqno9MSfeIDEO3x8X2LV/YdxnDv+M2ReydUWTdTZyUIbQ==
+  dependencies:
+    "@sentry/hub" "4.3.2"
+    "@sentry/minimal" "4.3.2"
+    "@sentry/types" "4.3.2"
+    "@sentry/utils" "4.3.2"
+
+"@sentry/hub@4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-4.3.2.tgz#1ea10038e2080035d2bc09f5f26829cd106a1516"
+  integrity sha512-mcTtzoGnCeYKhMMTK/3eweF7zU+3yYrweQqKu3gW/8pB5k32DP7pxsugFn5ERnNdPf9Fr6PRzYH0pL3F9uA64w==
+  dependencies:
+    "@sentry/types" "4.3.2"
+    "@sentry/utils" "4.3.2"
+
+"@sentry/minimal@4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-4.3.2.tgz#c0958e5858b2105a6a0b523787e459a03af603cc"
+  integrity sha512-gRg5Ie6sDPspe2WOlRTktlyY4LLaMY3OgCod6TSEsQA+SzI6s8yig/vYMb2MrMSg6eZ8IfvfrTZlEvkarK/mng==
+  dependencies:
+    "@sentry/hub" "4.3.2"
+    "@sentry/types" "4.3.2"
+
+"@sentry/node@^4.3.0":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-4.3.2.tgz#3c7cd3aff238f3b1eb3252147b963cbdf520aa45"
+  integrity sha512-EmgFS/RQevO3/OCOm+btmKW2udX+rPbV0CcAg5232KpX7mtfZFOchzeOQWloqIqTOVGH70Q6EiwxgT8O7X+vMA==
+  dependencies:
+    "@sentry/core" "4.3.2"
+    "@sentry/hub" "4.3.2"
+    "@sentry/types" "4.3.2"
+    "@sentry/utils" "4.3.2"
+    cookie "0.3.1"
+    lsmod "1.0.0"
+    md5 "2.2.1"
+    stack-trace "0.0.10"
+
+"@sentry/types@4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-4.3.2.tgz#28b143979482fcbc9f9e520250482dde015b13fa"
+  integrity sha512-m6VkvL2KUJLBr4O8rEmkP5ywactd61iL8GEj6KbRa7nTrKp28ELWEYWhJfaTBxNdFZT2pQ3Wbpo9KmJyVnrn8A==
+
+"@sentry/utils@4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-4.3.2.tgz#de14046eba972af9d62508f78cd998b0352d634a"
+  integrity sha512-Apd+6zhTAwk4oJbzv/uBq+ILVkIxNdizGBWVL+zmLXBxZ5km82D3t+j1MuFDDj5GpIAZ8SqyhbONxOW72XgeNA==
+  dependencies:
+    "@sentry/types" "4.3.2"
+
 "@sinonjs/formatio@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-2.0.0.tgz#84db7e9eb5531df18a8c5e0bfb6e449e55e654b2"
@@ -4890,6 +4942,11 @@ lru-cache@^4.0.1:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
 
+lsmod@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
+  integrity sha1-mgD3bco26yP6BTUK/htYXUKZ5ks=
+
 ltgt@^2.1.2, ltgt@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.2.0.tgz#b65ba5fcb349a29924c8e333f7c6a5562f2e4842"
@@ -4952,7 +5009,7 @@ md5.js@^1.3.4:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-md5@^2.2.1:
+md5@2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/md5/-/md5-2.2.1.tgz#53ab38d5fe3c8891ba465329ea23fac0540126f9"
   integrity sha1-U6s41f48iJG6RlMp6iP6wFQBJvk=
@@ -6091,17 +6148,6 @@ range-parser@^1.2.0, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
   integrity sha1-9JvmtIeJTdxA3MlKMi9hEJLgDV4=
-
-raven@^2.6.3:
-  version "2.6.4"
-  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.4.tgz#458d4a380c8fbb59e0150c655625aaf60c167ea3"
-  integrity sha512-6PQdfC4+DQSFncowthLf+B6Hr0JpPsFBgTVYTAOq7tCmx/kR4SXbeawtPch20+3QfUcQDoJBLjWW1ybvZ4kXTw==
-  dependencies:
-    cookie "0.3.1"
-    md5 "^2.2.1"
-    stack-trace "0.0.10"
-    timed-out "4.0.1"
-    uuid "3.3.2"
 
 raw-body@2.3.2:
   version "2.3.2"
@@ -7333,7 +7379,7 @@ through@2, through@^2.3.6, through@~2.3, through@~2.3.1, through@~2.3.4, through
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-timed-out@4.0.1, timed-out@^4.0.0, timed-out@^4.0.1:
+timed-out@^4.0.0, timed-out@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
   integrity sha1-8y6srFoXW+ol1/q1Zas+2HQe9W8=
@@ -7768,11 +7814,6 @@ uuid@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.1.tgz#c2a30dedb3e535d72ccf82e343941a50ba8533ac"
   integrity sha1-wqMN7bPlNdcsz4LjQ5QaULqFM6w=
-
-uuid@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
-  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
 uuid@^2.0.1:
   version "2.0.3"
