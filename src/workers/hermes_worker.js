@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import PeriodicWorker from './periodic_worker';
 import HermesUploadStrategy from './hermes_strategies/upload_strategy';
 import {getTimestamp} from '../utils/time_utils';
-
+import {mongoObjectSize} from '../utils/db_utils';
 
 export default class HermesWorker extends PeriodicWorker {
   constructor(dataModelEngine, workerLogRepository, strategy, logger) {
@@ -30,12 +30,16 @@ export default class HermesWorker extends PeriodicWorker {
   }
 
   async bundleCandidates() {
+    this.logger.info('begin bundleCandidates');
     const storagePeriods = this.strategy.storagePeriods();
 
     const sequenceNumber = this.bundleSequenceNumber++;
     const bundle = await this.dataModelEngine.prepareBundleCandidate(sequenceNumber);
 
+    this.logger.info(`new bundle candidate of size: ${mongoObjectSize(bundle)}`);
+
     if (await this.strategy.shouldBundle(bundle)) {
+      this.logger.info('bundle accepted');
       await this.dataModelEngine.acceptBundleCandidate(bundle, sequenceNumber, storagePeriods);
       await this.strategy.bundlingSucceeded();
       await this.addLog('Bundle candidate accepted');
@@ -43,9 +47,12 @@ export default class HermesWorker extends PeriodicWorker {
       await this.dataModelEngine.rejectBundleCandidate(sequenceNumber);
       await this.addLog('Bundle candidate discarded');
     }
+    this.logger.info('end bundleCandidates');
   }
 
   async uploadWaitingCandidates() {
+    this.logger.info('begin uploadWaitingCandidates');
+
     const results = await this.dataModelEngine.uploadAcceptedBundleCandidates();
     for (const bundleId of results.ok) {
       await this.addLog(`Bundle was uploaded`, {bundleId});
@@ -53,6 +60,7 @@ export default class HermesWorker extends PeriodicWorker {
     for (const [bundleId, error] of Object.entries(results.failed)) {
       await this.addLog(`Bundle failed to upload`, {bundleId, errorMsg: error.message || error});
     }
+    this.logger.info('end uploadWaitingCandidates');
   }
 
   async addLog(message, additionalFields) {
