@@ -10,9 +10,9 @@ COPY . ./
 
 RUN yarn build
 
-ARG GIT_COMMIT
-RUN test -n "$GIT_COMMIT"
-ENV GIT_COMMIT="$GIT_COMMIT"
-LABEL git_commit="$GIT_COMMIT"
+ARG GIT_SHA1
+RUN test -n "$GIT_SHA1"
+ENV GIT_COMMIT="$GIT_SHA1"
+LABEL git_commit="$GIT_SHA1"
 
 CMD ["yarn", "start"]
