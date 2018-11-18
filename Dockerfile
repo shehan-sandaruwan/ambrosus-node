@@ -11,6 +11,7 @@ COPY . ./
 RUN yarn build
 
 ARG GIT_SHA1
+RUN echo $GIT_SHA1
 RUN test -n "$GIT_SHA1"
 ENV GIT_COMMIT="$GIT_SHA1"
 LABEL git_commit="$GIT_SHA1"
