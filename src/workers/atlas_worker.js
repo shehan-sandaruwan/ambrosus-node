@@ -64,7 +64,8 @@ export default class AtlasWorker extends PeriodicWorker {
         break;
       }
     }
-    await this.dataModelEngine.cleanupBundles();
+    this.logger.info('would make cleanup');
+    // await this.dataModelEngine.cleanupBundles();
   }
 
   async addLog(message, additionalFields) {

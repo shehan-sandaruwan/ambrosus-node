@@ -166,10 +166,10 @@ describe('Atlas Worker', () => {
         expect(tryWithChallengeMock).to.not.have.been.calledWith(challenge3);
       });
 
-      it('calls cleanupBundles', async () => {
-        await atlasWorker.periodicWork();
-        expect(dataModelEngineMock.cleanupBundles).to.be.calledOnce;
-      });
+      // it('calls cleanupBundles', async () => {
+      //   await atlasWorker.periodicWork();
+      //   expect(dataModelEngineMock.cleanupBundles).to.be.calledOnce;
+      // });
     });
   });
 });
