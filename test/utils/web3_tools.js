@@ -9,8 +9,14 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {createWeb3, getBalance, getDefaultAddress, maximalGasPrice} from '../../src/utils/web3_tools';
-import BN from 'bn.js';
+import {
+  checkIfEnoughFundsToPayForGas,
+  createWeb3,
+  getBalance,
+  getDefaultAddress,
+  maximalGasPrice
+} from '../../src/utils/web3_tools';
+import sinon from 'sinon';
 
 chai.use(chaiAsPromised);
 const {expect} = chai;
@@ -24,18 +30,36 @@ describe('Web3 tools', () => {
     address = getDefaultAddress(web3);
   });
 
-  describe('getBalance', () => {
-    it(`returns user's balance`, async () => {
-      const realBalance = await web3.eth.getBalance(address);
-      expect((await getBalance(web3, address)).toString()).to.equal(realBalance);
-    });
-
-    it('returns big number', async () => {
-      expect(await getBalance(web3, address) instanceof BN).to.be.true;
-    });
+  it(`getBalance returns user's balance`, async () => {
+    const realBalance = await web3.eth.getBalance(address);
+    expect(await getBalance(web3, address)).to.equal(realBalance);
   });
 
   it('maximalGasPrice returns correct value', () => {
-    expect(maximalGasPrice().toString()).to.equal('40000000000000000');
+    expect(maximalGasPrice()).to.equal('23500000000000000');
+  });
+
+  describe('checkIfEnoughFundsToPayForGas', () => {
+    let getBalanceMock;
+
+    before(() => {
+      getBalanceMock = sinon.stub(web3.eth, 'getBalance');
+    });
+
+    after(() => {
+      getBalanceMock.restore();
+    });
+
+    it('returns false if balance is less than maxGasPrice', async () => {
+      getBalanceMock.resolves('13500000000000000');
+      expect(await checkIfEnoughFundsToPayForGas(web3, address)).to.be.false;
+    });
+
+    it('returns false if balance is greater or equals to maxGasPrice', async () => {
+      getBalanceMock.resolves('23500000000000000');
+      expect(await checkIfEnoughFundsToPayForGas(web3, address)).to.be.true;
+      getBalanceMock.resolves('23500000000000001');
+      expect(await checkIfEnoughFundsToPayForGas(web3, address)).to.be.true;
+    });
   });
 });
