@@ -121,7 +121,7 @@ export async function isSyncing(web3) {
   if (isSyncing === false) {
     return false;
   }
-  return isSyncing.currentBlock !== isSyncing.highestBlock;
+  return isSyncing.currentBlock < isSyncing.highestBlock;
 }
 
 export async function waitForChainSync(web3, timeoutInSeconds, chainNotSyncedCallback) {
