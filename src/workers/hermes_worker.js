@@ -7,18 +7,34 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import express from 'express';
+import asyncMiddleware from '../middlewares/async_middleware';
+import healthCheckHandler from '../routes/health_check';
 import PeriodicWorker from './periodic_worker';
 import HermesUploadStrategy from './hermes_strategies/upload_strategy';
 import {getTimestamp} from '../utils/time_utils';
 
-
 export default class HermesWorker extends PeriodicWorker {
-  constructor(dataModelEngine, workerLogRepository, strategy, logger) {
+  constructor(
+    dataModelEngine,
+    workerLogRepository,
+    strategy,
+    logger,
+    mongoClient,
+    serverPort
+  ) {
     super(strategy.workerInterval, logger);
     this.dataModelEngine = dataModelEngine;
     this.bundleSequenceNumber = 0;
     this.strategy = strategy;
     this.workerLogRepository = workerLogRepository;
+    this.mongoClient = mongoClient;
+    this.expressApp = express();
+    this.serverPort = serverPort;
+    this.expressApp.get('/health', asyncMiddleware(
+      healthCheckHandler(mongoClient, dataModelEngine.identityManager.web3)
+    ));
+
     if (!(this.strategy instanceof HermesUploadStrategy)) {
       throw new Error('A valid strategy must be provided');
     }
@@ -66,5 +82,11 @@ export default class HermesWorker extends PeriodicWorker {
 
   async beforeWorkLoop() {
     await this.dataModelEngine.rejectAllBundleCandidate();
+    this.server = this.expressApp.listen(this.serverPort);
+  }
+
+  async afterWorkLoop() {
+    this.server.close();
+    this.mongoClient.close();
   }
 }

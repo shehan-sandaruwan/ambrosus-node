@@ -13,13 +13,15 @@ import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
 import AtlasWorker from '../../src/workers/atlas_worker';
 import AtlasChallengeParticipationStrategy from '../../src/workers/atlas_strategies/atlas_challenge_resolution_strategy';
+import {createWeb3} from '../../src/utils/web3_tools';
+import {connectToMongo} from '../../src/utils/db_utils';
+import config from '../../config/config';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 const {expect} = chai;
 
 describe('Atlas Worker', () => {
-  const defaultAccount = '0x123';
   const fetchedBundle = {bundleId: 'fetchedBundle'};
   const workerInterval = 10;
   let atlasWorker;
@@ -30,14 +32,10 @@ describe('Atlas Worker', () => {
   let loggerMock;
   let shouldFetchBundleStub;
   let shouldResolveChallengeStub;
-  let mockWeb3;
 
-  beforeEach(() => {
-    mockWeb3 = {
-      eth: {
-        defaultAccount
-      }
-    };
+  beforeEach(async () => {
+    const web3 = await createWeb3();
+    const {client: mongoClient} = await connectToMongo(config);
     challengesRepositoryMock = {
       ongoingChallenges: sinon.stub(),
       resolveChallenge: sinon.stub()
@@ -59,7 +57,12 @@ describe('Atlas Worker', () => {
       info: sinon.spy(),
       error: sinon.spy()
     };
-    atlasWorker = new AtlasWorker(mockWeb3, dataModelEngineMock, mockWorkerLogRepository, challengesRepositoryMock, strategyMock, loggerMock);
+    atlasWorker = new AtlasWorker(web3, dataModelEngineMock, mockWorkerLogRepository, challengesRepositoryMock, strategyMock, loggerMock, mongoClient);
+    atlasWorker.beforeWorkLoop();
+  });
+
+  afterEach(async () => {
+    await atlasWorker.afterWorkLoop();
   });
 
   describe('challenge resolution strategy', () => {
@@ -113,5 +116,11 @@ describe('Atlas Worker', () => {
       dataModelEngineMock.downloadBundle.rejects();
       await expect(atlasWorker.periodicWork()).to.be.eventually.fulfilled;
     });
+  });
+
+  it('health checks', async () => {
+    const {port} = atlasWorker.server.address();
+    const {status} = await chai.request(`http://localhost:${port}`).get('/health');
+    expect(status).to.eql(200);
   });
 });

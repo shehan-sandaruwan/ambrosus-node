@@ -21,7 +21,16 @@ async function start(logger) {
   }
   await builder.ensureAccountIsOnboarded([Role.ATLAS]);
   const strategy = loadStrategy(config.challengeResolutionStrategy);
-  const worker = new AtlasWorker(builder.web3, builder.dataModelEngine, builder.workerLogRepository, builder.challengesRepository, strategy, logger);
+  const worker = new AtlasWorker(
+    builder.web3,
+    builder.dataModelEngine,
+    builder.workerLogRepository,
+    builder.challengesRepository,
+    strategy,
+    logger,
+    builder.client,
+    config.serverPort
+  );
   await worker.start();
 }
 
